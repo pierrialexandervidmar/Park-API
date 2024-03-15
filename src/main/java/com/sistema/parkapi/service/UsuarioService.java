@@ -28,4 +28,10 @@ public class UsuarioService {
         Optional<Usuario> obj = usuarioRepository.findById(id);
         return obj.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
+
+    public Usuario editarSenha(Long id, String password, String novaSenha, String conrima) {
+        Usuario user = buscaPorId(id);
+        user.setPassword(pass);
+        retur user;
+    }
 }
