@@ -29,9 +29,20 @@ public class UsuarioService {
         return obj.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
     }
 
-    public Usuario editarSenha(Long id, String password, String novaSenha, String conrima) {
+    public Usuario editarSenha(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
+        // Validamos se a nova senha e confirmação são diferentes ou iguais
+        if(!novaSenha.equals(confirmaSenha)) {
+            throw new RuntimeException("Nova senha não confere com confirmação de senha");
+        }
+
         Usuario user = buscaPorId(id);
-        user.setPassword(pass);
-        retur user;
+
+        // Validamos se a nova senha e confirmação são diferentes ou iguais
+        if(!user.getPassword().equals(senhaAtual)) {
+            throw new RuntimeException("Senha atual não confere");
+        }
+
+        user.setPassword(novaSenha);
+        return user;
     }
 }
