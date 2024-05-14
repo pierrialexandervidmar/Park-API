@@ -1,10 +1,13 @@
 package com.sistema.parkapi.service;
 
 import com.sistema.parkapi.entity.Usuario;
+import com.sistema.parkapi.exception.EntityNotFoundException;
+import com.sistema.parkapi.exception.UserNameUniqueViolationException;
 import com.sistema.parkapi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,13 +23,17 @@ public class UsuarioService {
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+        try {
+            return usuarioRepository.save(usuario);
+        } catch (DataIntegrityViolationException ex) {
+            throw new UserNameUniqueViolationException(String.format("Username {%s} já cadastrado", usuario.getUsername()));
+        }
     }
 
     @Transactional(readOnly = true)
     public Usuario buscaPorId(Long id) {
         Optional<Usuario> obj = usuarioRepository.findById(id);
-        return obj.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        return obj.orElseThrow(() -> new EntityNotFoundException(String.format("Usuário id = %s não encontrado", id)));
     }
 
     public Usuario editarSenha(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
