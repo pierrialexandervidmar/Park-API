@@ -8,13 +8,13 @@ import org.springframework.boot.context.config.ConfigDataResourceNotFoundExcepti
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UsuarioService {
 
-    @Autowired
     private final UsuarioRepository usuarioRepository;
 
 
@@ -45,4 +45,9 @@ public class UsuarioService {
         user.setPassword(novaSenha);
         return user;
     }
+
+    @Transactional(readOnly = true)
+	public List<Usuario> buscarTodos() {
+		return usuarioRepository.findAll();
+	}
 }

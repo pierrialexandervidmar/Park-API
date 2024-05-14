@@ -7,6 +7,9 @@ import com.sistema.parkapi.entity.Usuario;
 import com.sistema.parkapi.web.dto.UsuarioCreateDto;
 import com.sistema.parkapi.web.dto.UsuarioResponseDto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * A classe {@code UsuarioMapper} fornece métodos estáticos para mapear entre objetos relacionados com usuário
  * e DTOs (Data Transfer Objects).
@@ -49,9 +52,13 @@ public class UsuarioMapper {
 
 		// Cria um novo ModelMapper e adiciona as configurações personalizadas
 		ModelMapper mapper = new ModelMapper();
-		mapper.addMappings(props);
+		mapper.addMappings(props); 
 
 		// Retorna o objeto UsuarioResponseDto mapeado
 		return mapper.map(usuario, UsuarioResponseDto.class);
+	}
+
+	public static List<UsuarioResponseDto> toListDto(List<Usuario> usuarios) {
+		return usuarios.stream().map(user -> toDto(user)).collect(Collectors.toList());
 	}
 }
