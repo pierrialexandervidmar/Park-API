@@ -3,7 +3,14 @@ package com.sistema.parkapi.web.controller;
 import java.util.List;
 
 import com.sistema.parkapi.web.dto.UsuarioSenhaDto;
+import com.sistema.parkapi.web.exception.ErrorMessage;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jdk.jfr.ContentType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +23,7 @@ import com.sistema.parkapi.web.dto.mapper.UsuarioMapper;
 
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Usuarios", description = "Controlador do recurso de usuários")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1/usuarios")
@@ -23,6 +31,16 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
+    @Operation(summary = "Criar um novo usuário", description = "Recurso para criar um novo usuário",
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Recurso criado sucesso",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+            @ApiResponse(responseCode = "409", description = "Usuário ou email já cadastrado",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse(responseCode = "402", description = "Recursos não processados por dados de entrada inválidos",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+        }
+    )
     @PostMapping
     public ResponseEntity<UsuarioResponseDto> create(@Valid @RequestBody UsuarioCreateDto createDto) {
         Usuario user = usuarioService.salvar(UsuarioMapper.toUsuario(createDto));
