@@ -31,16 +31,11 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
-    @Operation(summary = "Criar um novo usuário", description = "Recurso para criar um novo usuário",
-        responses = {
-            @ApiResponse(responseCode = "201", description = "Recurso criado sucesso",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
-            @ApiResponse(responseCode = "409", description = "Usuário ou email já cadastrado",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-            @ApiResponse(responseCode = "402", description = "Recursos não processados por dados de entrada inválidos",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-        }
-    )
+    @Operation(summary = "Criar um novo usuário", description = "Recurso para criar um novo usuário", responses = {
+            @ApiResponse(responseCode = "201", description = "Recurso criado sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+            @ApiResponse(responseCode = "409", description = "Usuário ou email já cadastrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse(responseCode = "402", description = "Recursos não processados por dados de entrada inválidos", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+    })
     @PostMapping
     public ResponseEntity<UsuarioResponseDto> create(@Valid @RequestBody UsuarioCreateDto createDto) {
         Usuario user = usuarioService.salvar(UsuarioMapper.toUsuario(createDto));
@@ -54,7 +49,8 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UsuarioResponseDto> updatePassword(@Valid @PathVariable Long id, @RequestBody UsuarioSenhaDto dto) {
+    public ResponseEntity<UsuarioResponseDto> updatePassword(@Valid @PathVariable Long id,
+            @RequestBody UsuarioSenhaDto dto) {
         Usuario user = usuarioService.editarSenha(id, dto.getSenhaAtual(), dto.getNovaSenha(), dto.getConfirmaSenha());
         return ResponseEntity.noContent().build();
     }

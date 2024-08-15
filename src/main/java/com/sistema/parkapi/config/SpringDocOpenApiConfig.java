@@ -18,9 +18,9 @@ public class SpringDocOpenApiConfig {
                                 .title("REST API - Park API")
                                 .description("API para gestão de estacionamento de veículos")
                                 .version("v1")
-                                .license(new License().name("Apache 2").url("https://www.apache.org/licenses/LICENSE-2.0"))
-                                .contact(new Contact().name("Jurandir Neves"))
-                );
+                                .license(new License().name("Apache 2")
+                                        .url("https://www.apache.org/licenses/LICENSE-2.0"))
+                                .contact(new Contact().name("Jurandir Neves").email("jurandi@teste.com.br")));
     }
 
 }
