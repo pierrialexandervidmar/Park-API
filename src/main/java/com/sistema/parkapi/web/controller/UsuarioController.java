@@ -42,6 +42,12 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toDto(user));
     }
 
+    @Operation(summary = "Recuperar um usuário pelo ID", description = "Recuperar um usuário pelo ID", responses = {
+            @ApiResponse(responseCode = "200", description = "Recurso recuperado com sucesso",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+    })
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDto> getById(@PathVariable Long id) {
         Usuario user = usuarioService.buscaPorId(id);
