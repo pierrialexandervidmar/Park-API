@@ -54,6 +54,14 @@ public class UsuarioController {
         return ResponseEntity.ok(UsuarioMapper.toDto(user));
     }
 
+    @Operation(summary = "Atualizar Senha", description = "Atualizar Senha", responses = {
+            @ApiResponse(responseCode = "204", description = "Senha atualizada com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
+            @ApiResponse(responseCode = "400", description = "Senha incorreta",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse(responseCode = "404", description = "Recurso não encontrado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+    })
     @PatchMapping("/{id}")
     public ResponseEntity<UsuarioResponseDto> updatePassword(@Valid @PathVariable Long id,
             @RequestBody UsuarioSenhaDto dto) {
@@ -61,6 +69,12 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Listar todos os usuários", description = "Listar todos os usuários", responses = {
+            @ApiResponse(responseCode = "200", description = "Usuários localizados com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+            @ApiResponse(responseCode = "404", description = "Recursos não encontrados",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+    })
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDto>> getAll() {
         List<Usuario> users = usuarioService.buscarTodos();
