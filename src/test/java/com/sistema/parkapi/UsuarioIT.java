@@ -1,5 +1,6 @@
 package com.sistema.parkapi;
 
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
@@ -11,5 +12,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 public class UsuarioIT {
     @Autowired
     WebTestClient testClient;
+
+    @Test
+    public void
 
 }
