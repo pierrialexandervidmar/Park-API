@@ -17,19 +17,10 @@ import java.util.Date;
 /**
  * Classe utilitária para manipulação de tokens JWT (JSON Web Tokens).
  *
- * <p>Esta classe fornece métodos para criar tokens JWT, extrair claims e validar tokens.
+ * Esta classe fornece métodos para criar tokens JWT, extrair claims e validar tokens.
  * Utiliza a biblioteca {@code io.jsonwebtoken} para o processamento dos JWTs e inclui uma
- * chave secreta para assinar os tokens.</p>
+ * chave secreta para assinar os tokens.
  *
- * <p>Nota: Esta classe não é instanciável e contém apenas métodos estáticos.</p>
- *
- * <p><strong>Constantes:</strong></p>
- * <ul>
- *   <li>JWT_BEARER: Prefixo para tokens do tipo Bearer.</li>
- *   <li>JWT_AUTHORIZATION: Cabeçalho utilizado para autorização.</li>
- *   <li>SECRET_KEY: Chave secreta usada para assinar os tokens.</li>
- *   <li>EXPIRE_DAYS, EXPIRE_HOURS, EXPIRE_MINUTES: Configurações de expiração do token.</li>
- * </ul>
  */
 @Slf4j
 public class JwtUtils {

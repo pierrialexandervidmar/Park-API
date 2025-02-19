@@ -5,10 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Representa um token JWT usado para autenticação.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 public class JwtToken {
+
+    /**
+     * O token JWT.
+     */
     private String token;
 }
