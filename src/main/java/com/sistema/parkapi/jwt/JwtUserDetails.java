@@ -9,7 +9,7 @@ import java.util.Collection;
 
 /**
  * Classe que representa os detalhes de autenticação de um usuário com JWT.
- *
+ * <p>
  * Estende a classe {@link org.springframework.security.core.userdetails.User}
  * para incorporar um objeto {@link Usuario}, permitindo acesso a informações
  * adicionais do usuário no contexto de segurança.

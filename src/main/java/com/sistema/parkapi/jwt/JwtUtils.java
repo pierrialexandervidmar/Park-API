@@ -4,7 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.security.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.SecretKey;
@@ -43,9 +43,10 @@ public class JwtUtils {
      *
      * @return Um objeto {@link Key} representando a chave secreta.
      */
-    private static Key generateKey() {
+    private static SecretKey generateKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
+
 
     /**
      * Calcula a data de expiração do token com base na data de início e nos valores
@@ -90,14 +91,17 @@ public class JwtUtils {
      */
     public static Claims getClaimsFromToken(String token) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(generateKey()).build()
-                    .parseClaimsJws(refactorToken(token)).getBody();
+            return Jwts.parser()
+                    .verifyWith(generateKey())
+                    .build()
+                    .parseSignedClaims(refactorToken(token))
+                    .getPayload();
         } catch (JwtException ex) {
             log.error(String.format("Token inválido: %s", ex.getMessage()));
         }
         return null;
     }
+
 
     /**
      * Recupera o nome do usuário (subject) a partir de um token JWT.
@@ -105,7 +109,7 @@ public class JwtUtils {
      * @param token O token JWT a ser analisado.
      * @return O nome do usuário contido no token.
      */
-    public static String getUsennameFromToken(String token) {
+    public static String getUsernameFromToken(String token) {
         return getClaimsFromToken(token).getSubject();
     }
 
@@ -117,15 +121,17 @@ public class JwtUtils {
      */
     public static boolean isTokenValid(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(generateKey()).build()
-                    .parseClaimsJws(refactorToken(token));
+            Jwts.parser()
+                    .verifyWith(generateKey())
+                    .build()
+                    .parseSignedClaims(refactorToken(token));
             return true;
         } catch (JwtException ex) {
             log.error(String.format("Token inválido: %s", ex.getMessage()));
         }
         return false;
     }
+
 
     /**
      * Remove o prefixo "Bearer " do token, se ele estiver presente.

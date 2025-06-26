@@ -5,9 +5,8 @@ import com.sistema.parkapi.exception.EntityNotFoundException;
 import com.sistema.parkapi.exception.UserNameUniqueViolationException;
 import com.sistema.parkapi.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +18,12 @@ import java.util.Optional;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
         try {
+            usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
             return usuarioRepository.save(usuario);
         } catch (DataIntegrityViolationException ex) {
             throw new UserNameUniqueViolationException(String.format("Username {%s} já cadastrado", usuario.getUsername()));
@@ -36,27 +36,28 @@ public class UsuarioService {
         return obj.orElseThrow(() -> new EntityNotFoundException(String.format("Usuário id = %s não encontrado", id)));
     }
 
+    @Transactional
     public Usuario editarSenha(Long id, String senhaAtual, String novaSenha, String confirmaSenha) {
         // Validamos se a nova senha e confirmação são diferentes ou iguais
-        if(!novaSenha.equals(confirmaSenha)) {
+        if (!novaSenha.equals(confirmaSenha)) {
             throw new RuntimeException("Nova senha não confere com confirmação de senha");
         }
 
         Usuario user = buscaPorId(id);
 
         // Validamos se a nova senha e confirmação são diferentes ou iguais
-        if(!user.getPassword().equals(senhaAtual)) {
+        if (!passwordEncoder.matches(senhaAtual, user.getPassword())) {
             throw new RuntimeException("Senha atual não confere");
         }
 
-        user.setPassword(novaSenha);
+        user.setPassword(passwordEncoder.encode(novaSenha));
         return user;
     }
 
     @Transactional(readOnly = true)
-	public List<Usuario> buscarTodos() {
-		return usuarioRepository.findAll();
-	}
+    public List<Usuario> buscarTodos() {
+        return usuarioRepository.findAll();
+    }
 
     @Transactional(readOnly = true)
     public Usuario buscarPorNome(String username) {

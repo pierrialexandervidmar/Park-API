@@ -38,7 +38,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String username = JwtUtils.getUsennameFromToken(token);
+        String username = JwtUtils.getUsernameFromToken(token);
 
         toAuthentications(request, username);
 
